@@ -4,7 +4,6 @@ body {
     color: #e0e0e0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    /* Отступ снизу под свернутую шторку */
     padding: 0 0 100px 0; 
 }
 
@@ -21,14 +20,9 @@ h1 {
 /* --- Стили для главной страницы (index.html) --- */
 .model-grid {
     display: grid;
-    /* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- */
-    /* 1. Увеличили минимальный размер карточки до 350px, чтобы они были крупнее. */
-    /* 2. Используем auto-fit, чтобы сетка лучше адаптировалась. */
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 30px;
     padding: 20px;
-    /* 3. Убираем max-width и margin, чтобы контейнер был гибким. */
-    /* 4. Добавляем justify-content, чтобы сами карточки центрировались внутри сетки. */
     justify-content: center;
 }
 
@@ -41,7 +35,7 @@ h1 {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     animation: breathing-glow 4s infinite ease-in-out;
-    text-decoration: none; /* Убираем подчеркивание у ссылок */
+    text-decoration: none;
 }
 
 .model-card:hover {
@@ -81,16 +75,17 @@ h1 {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 12px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 15px; /* Немного увеличим отступ для большого текста */
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     text-align: left;
 }
 
 .card-info h3 {
     margin: 0;
-    font-size: 1.2rem;
+    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: Увеличили размер шрифта --- */
+    font-size: 1.6rem; 
     color: #fff;
-    text-shadow: 1px 1px 3px #000;
+    text-shadow: 1px 1px 4px #000;
 }
 
 .card-info .likes {
@@ -129,7 +124,6 @@ h1 {
     display: block;
 }
 
-/* Адаптивность для Masonry */
 @media (max-width: 1600px) { .masonry-item { width: calc(25% - 5px); } }
 @media (max-width: 1200px) { .masonry-item { width: calc(33.33% - 5px); } }
 @media (max-width: 768px)  { .masonry-item { width: calc(50% - 5px); } }
@@ -143,38 +137,27 @@ h1 {
     left: 0;
     right: 0;
     z-index: 100;
-
     background: rgba(30, 30, 30, 0.9);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid #444;
     border-radius: 20px 20px 0 0;
-
     height: 80vh; 
     max-height: 80%;
-    
     transform: translateY(calc(100% - 80px)); 
     transition: transform 0.4s ease-in-out;
+    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: делаем всю шторку кликабельной --- */
+    cursor: pointer; 
 }
 
 .info-drawer.is-open {
     transform: translateY(0);
 }
 
-.info-drawer.is-dragging {
-    transition: none;
-}
-
 .drawer-handle-wrapper {
-    padding: 10px;
-    cursor: grab;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-}
-.drawer-handle-wrapper:active {
-    cursor: grabbing;
+    padding-top: 20px; /* Даем место для стрелочек */
+    position: relative; /* Нужно для позиционирования стрелок */
+    text-align: center;
 }
 
 .drawer-handle {
@@ -182,13 +165,49 @@ h1 {
     height: 5px;
     background-color: #666;
     border-radius: 3px;
+    display: inline-block;
 }
+
+/* --- ИЗМЕНЕНИЕ ЗДЕСЬ: Добавляем стрелочки-индикаторы --- */
+.drawer-handle-wrapper::before,
+.drawer-handle-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid rgba(255, 255, 255, 0.4);
+    border-right: 2px solid rgba(255, 255, 255, 0.4);
+    transform: rotate(-45deg); /* Стрелка вверх */
+    transition: transform 0.4s ease;
+}
+
+.drawer-handle-wrapper::before {
+    left: 40px;
+}
+.drawer-handle-wrapper::after {
+    right: 40px;
+}
+
+/* Когда шторка открыта, поворачиваем стрелки вниз */
+.info-drawer.is-open .drawer-handle-wrapper::before,
+.info-drawer.is-open .drawer-handle-wrapper::after {
+    transform: rotate(135deg); /* Стрелка вниз */
+}
+
 
 .drawer-content {
     padding: 0 20px 20px;
     height: calc(100% - 30px);
     overflow-y: auto;
+    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: чтобы текст не реагировал на клик --- */
+    pointer-events: none;
 }
+.info-drawer.is-open .drawer-content {
+    /* Когда шторка открыта, контент можно выделять и скроллить */
+    pointer-events: auto;
+}
+
 
 .content-header {
     display: flex;
@@ -207,7 +226,16 @@ h1 {
 #model-description {
     margin: 0;
     line-height: 1.6;
+    /* В свернутом виде видна одна строчка текста */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+.info-drawer.is-open #model-description {
+    /* В развернутом виде текст переносится как обычно */
+    white-space: normal;
+}
+
 
 .like-button {
     background-color: #333;
@@ -219,6 +247,8 @@ h1 {
     transition: background-color 0.2s;
     font-size: 1rem;
     white-space: nowrap;
+    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: возвращаем кнопке кликабельность --- */
+    pointer-events: auto; 
 }
 
 .like-button:hover {
