@@ -75,14 +75,13 @@ h1 {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 15px; /* Немного увеличим отступ для большого текста */
+    padding: 15px;
     background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     text-align: left;
 }
 
 .card-info h3 {
     margin: 0;
-    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: Увеличили размер шрифта --- */
     font-size: 1.6rem; 
     color: #fff;
     text-shadow: 1px 1px 4px #000;
@@ -124,10 +123,14 @@ h1 {
     display: block;
 }
 
+/* Адаптивность для Masonry */
 @media (max-width: 1600px) { .masonry-item { width: calc(25% - 5px); } }
 @media (max-width: 1200px) { .masonry-item { width: calc(33.33% - 5px); } }
-@media (max-width: 768px)  { .masonry-item { width: calc(50% - 5px); } }
-@media (max-width: 480px)  { .masonry-item { width: 100%;} }
+@media (max-width: 768px)  { .masonry-item { width: calc(50% - 5px); } } /* 2 колонки для планшетов */
+
+/* --- ИЗМЕНЕНИЕ ЗДЕСЬ --- */
+/* Делаем 2 колонки для всех мобильных, даже самых узких */
+@media (max-width: 480px)  { .masonry-item { width: calc(50% - 5px); } } 
 
 
 /* --- Стили для выдвижной шторки --- */
@@ -146,7 +149,6 @@ h1 {
     max-height: 80%;
     transform: translateY(calc(100% - 80px)); 
     transition: transform 0.4s ease-in-out;
-    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: делаем всю шторку кликабельной --- */
     cursor: pointer; 
 }
 
@@ -155,8 +157,8 @@ h1 {
 }
 
 .drawer-handle-wrapper {
-    padding-top: 20px; /* Даем место для стрелочек */
-    position: relative; /* Нужно для позиционирования стрелок */
+    padding-top: 20px;
+    position: relative;
     text-align: center;
 }
 
@@ -168,7 +170,6 @@ h1 {
     display: inline-block;
 }
 
-/* --- ИЗМЕНЕНИЕ ЗДЕСЬ: Добавляем стрелочки-индикаторы --- */
 .drawer-handle-wrapper::before,
 .drawer-handle-wrapper::after {
     content: '';
@@ -189,7 +190,6 @@ h1 {
     right: 40px;
 }
 
-/* Когда шторка открыта, поворачиваем стрелки вниз */
 .info-drawer.is-open .drawer-handle-wrapper::before,
 .info-drawer.is-open .drawer-handle-wrapper::after {
     transform: rotate(135deg); /* Стрелка вниз */
@@ -200,11 +200,9 @@ h1 {
     padding: 0 20px 20px;
     height: calc(100% - 30px);
     overflow-y: auto;
-    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: чтобы текст не реагировал на клик --- */
     pointer-events: none;
 }
 .info-drawer.is-open .drawer-content {
-    /* Когда шторка открыта, контент можно выделять и скроллить */
     pointer-events: auto;
 }
 
@@ -226,13 +224,11 @@ h1 {
 #model-description {
     margin: 0;
     line-height: 1.6;
-    /* В свернутом виде видна одна строчка текста */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .info-drawer.is-open #model-description {
-    /* В развернутом виде текст переносится как обычно */
     white-space: normal;
 }
 
@@ -247,7 +243,6 @@ h1 {
     transition: background-color 0.2s;
     font-size: 1rem;
     white-space: nowrap;
-    /* --- ИЗМЕНЕНИЕ ЗДЕСЬ: возвращаем кнопке кликабельность --- */
     pointer-events: auto; 
 }
 
