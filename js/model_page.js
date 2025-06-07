@@ -42,8 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         itemSelector: '.masonry-item',
                         percentPosition: true, 
                         gutter: 5,
-                        // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-                        // Эта опция автоматически центрирует всю сетку по горизонтали
                         isFitWidth: true 
                     });
                 };
@@ -52,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             setupLikes(model.id, 0); 
-            setupDraggableDrawer();
+            setupInfoDrawer(); // Вызываем простую функцию
         })
         .catch(error => console.error('Ошибка при загрузке данных:', error));
 });
@@ -74,7 +72,10 @@ function setupLikes(modelId, initialLikes) {
         likeButton.disabled = true;
     }
 
-    likeButton.addEventListener('click', () => {
+    likeButton.addEventListener('click', (event) => {
+        // Останавливаем "всплытие" события, чтобы клик по кнопке не закрывал шторку
+        event.stopPropagation(); 
+
         if (likeButton.classList.contains('liked')) return;
 
         currentLikes++;
@@ -88,64 +89,13 @@ function setupLikes(modelId, initialLikes) {
     });
 }
 
-// --- ЛОГИКА ПЕРЕТАСКИВАЕМОЙ ШТОРКИ ---
-function setupDraggableDrawer() {
+// --- ИЗМЕНЕНИЕ ЗДЕСЬ: Возвращаем простую логику для шторки ---
+function setupInfoDrawer() {
     const drawer = document.getElementById('info-drawer');
-    const handle = drawer.querySelector('.drawer-handle-wrapper');
-    
-    let isDragging = false;
-    let startY, startTransform;
 
-    const dragStart = (e) => {
-        isDragging = true;
-        drawer.classList.add('is-dragging');
-        startY = e.pageY || e.touches[0].pageY;
-        
-        // Запоминаем текущее смещение
-        const currentTransform = window.getComputedStyle(drawer).transform;
-        startTransform = new DOMMatrix(currentTransform).m42; // m42 - это смещение по Y
-
-        document.body.style.overflow = 'hidden';
-    };
-
-    const dragMove = (e) => {
-        if (!isDragging) return;
-        const currentY = e.pageY || e.touches[0].pageY;
-        const delta = currentY - startY; // Насколько сдвинули
-        const newTransformY = startTransform + delta;
-        
-        // Ограничиваем движение, чтобы шторка не "улетала" вверх
-        const minTransformY = window.innerHeight * 0.2; // 20% от высоты экрана
-        if (newTransformY > minTransformY) {
-            drawer.style.transform = `translateY(${newTransformY}px)`;
-        }
-    };
-
-    const dragEnd = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        drawer.classList.remove('is-dragging');
-        document.body.style.overflow = '';
-
-        // Сбрасываем инлайновый стиль, чтобы CSS-переход сработал
-        drawer.style.transform = ''; 
-        
-        const currentTransform = window.getComputedStyle(drawer).transform;
-        const matrix = new DOMMatrix(currentTransform);
-        const currentY = matrix.m42;
-        
-        if (currentY < window.innerHeight * 0.7) {
-            drawer.classList.add('is-open');
-        } else {
-            drawer.classList.remove('is-open');
-        }
-    };
-
-    handle.addEventListener('mousedown', dragStart);
-    document.addEventListener('mousemove', dragMove);
-    document.addEventListener('mouseup', dragEnd);
-
-    handle.addEventListener('touchstart', dragStart);
-    document.addEventListener('touchmove', dragMove);
-    document.addEventListener('touchend', dragEnd);
+    if (drawer) {
+        drawer.addEventListener('click', () => {
+            drawer.classList.toggle('is-open');
+        });
+    }
 }
