@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея Модели</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="model-page-header">
+        <a href="index.html" class="back-button">← Назад</a>
+        <h1 id="model-name-header">Загрузка...</h1>
+    </header>
+    <main>
+        <div id="masonry-gallery" class="masonry-gallery">
+            </div>
+    </main>
+
+    <div id="info-drawer" class="info-drawer">
+        <div class="drawer-handle-wrapper">
+            <div class="drawer-handle"></div>
+        </div>
+        <div class="drawer-content">
+            <div class="content-header">
+                <h2 id="model-name-drawer">Загрузка...</h2>
+                <button id="like-button" class="like-button">👍 Лайк (<span id="like-count">0</span>)</button>
+            </div>
+            <p id="model-description">Описание загружается...</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="js/model_page.js"></script>
+</body>
+</html>
